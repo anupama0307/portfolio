@@ -21,7 +21,7 @@ function AnimatedCounter({
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => {
     if (Number.isInteger(value)) return Math.round(latest);
-    return latest.toFixed(2);
+    return parseFloat(latest.toFixed(2));
   });
 
   useEffect(() => {
