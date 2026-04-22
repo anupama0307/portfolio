@@ -224,41 +224,46 @@ export const experiences: Experience[] = [
   },
 ];
 
-export interface Testimonial {
-  quote: string;
-  name: string;
-  role: string;
-  company: string;
+export interface Achievement {
+  title: string;
+  org: string;
+  year: string;
+  description: string;
+  icon: "trophy" | "flame" | "book" | "zap";
 }
 
-export const testimonials: Testimonial[] = [
+export const achievements: Achievement[] = [
   {
-    quote:
-      "Anupama has a rare ability to understand both the technical complexity and the user experience. Her work on RISKOFF was exceptional — clean architecture, thoughtful design.",
-    name: "Project Mentor",
-    role: "Senior Developer",
-    company: "Amrita University",
+    title: "National Semi-Finalist — Flipkart GRID 7.0",
+    org: "Flipkart",
+    year: "2025",
+    description:
+      "Competed among thousands of teams in one of India's most prestigious tech challenges, advancing to the national semi-final round with an innovative solution.",
+    icon: "trophy",
   },
   {
-    quote:
-      "The attention to detail in every component she builds is remarkable. She doesn't just make things work — she makes them feel premium and polished.",
-    name: "Team Lead",
-    role: "Hackathon Teammate",
-    company: "Flipkart GRID 7.0",
+    title: "Research Paper — Wildfire Prediction",
+    org: "Amrita Vishwa Vidyapeetham",
+    year: "2025",
+    description:
+      "Authored a research paper on wildfire prediction using XGBoost and MODIS/VIIRS satellite data, submitted for publication in an international journal.",
+    icon: "book",
   },
   {
-    quote:
-      "Working with Anupama on GemChef was a great experience. Her ability to architect full-stack solutions with AI integrations is truly impressive for someone still in university.",
-    name: "Peer Developer",
-    role: "Collaborator",
-    company: "Open Source",
+    title: "4+ Production-Grade Projects Shipped",
+    org: "Independent",
+    year: "2023 — Present",
+    description:
+      "Architected and deployed full-stack applications spanning fintech, AI-powered meal planning, real-time mobility, and machine learning — from concept to production.",
+    icon: "zap",
   },
   {
-    quote:
-      "From database schema design to real-time WebSocket implementations — she handles the full spectrum with confidence. A true full-stack developer in every sense.",
-    name: "Faculty Advisor",
-    role: "Professor",
-    company: "CSE Department",
+    title: "CGPA 8.56 — B.Tech CSE",
+    org: "Amrita Vishwa Vidyapeetham",
+    year: "2023 — 2027",
+    description:
+      "Maintaining strong academic performance while actively building production-grade projects, contributing to research, and competing in national hackathons.",
+    icon: "flame",
   },
 ];
 

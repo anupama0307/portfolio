@@ -7,7 +7,7 @@ import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
-import Testimonials from "@/components/sections/Testimonials";
+import Achievements from "@/components/sections/Achievements";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import Navbar from "@/components/layout/Navbar";
@@ -43,7 +43,7 @@ export default function Home() {
           <Skills />
           <Projects />
           <Experience />
-          <Testimonials />
+          <Achievements />
           <Contact />
         </main>
         <Footer />

@@ -5,12 +5,14 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { navLinks, personalInfo } from "@/lib/data";
 import { Menu, X } from "lucide-react";
+import { useLenis } from "@/components/layout/SmoothScroll";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const { scrollTo } = useLenis();
 
   useEffect(() => {
     const onScroll = () => {
@@ -38,10 +40,7 @@ export default function Navbar() {
 
   const handleNavClick = (href: string) => {
     setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollTo(href);
   };
 
   return (
@@ -62,7 +61,10 @@ export default function Navbar() {
           <Link
             href="/"
             className="font-display italic text-xl md:text-2xl font-medium text-text-primary hover:text-accent transition-colors duration-300"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo(0, { offset: 0 });
+            }}
           >
             {personalInfo.name.split(" ")[0]}
             <span className="text-accent">.</span>

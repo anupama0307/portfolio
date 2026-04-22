@@ -1,57 +1,79 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { personalInfo, marqueeItems } from "@/lib/data";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import { ArrowDown } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import { useLenis } from "@/components/layout/SmoothScroll";
 
 function GlowOrb() {
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const orbRef = useRef<HTMLDivElement>(null);
+  const orb2Ref = useRef<HTMLDivElement>(null);
+  const mouse = useRef({ x: 0.5, y: 0.5 });
+  const current = useRef({ x1: 0, y1: 0, x2: 0, y2: 0 });
 
   useEffect(() => {
     const handleMouse = (e: MouseEvent) => {
-      setMousePos({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      });
+      mouse.current.x = e.clientX / window.innerWidth;
+      mouse.current.y = e.clientY / window.innerHeight;
     };
-    window.addEventListener("mousemove", handleMouse);
-    return () => window.removeEventListener("mousemove", handleMouse);
+
+    let rafId: number;
+    const animate = () => {
+      const tx1 = mouse.current.x * 200 - 100;
+      const ty1 = mouse.current.y * 200 - 100;
+      const tx2 = mouse.current.x * -100 + 50;
+      const ty2 = mouse.current.y * -100 + 50;
+
+      // Smooth lerp
+      current.current.x1 += (tx1 - current.current.x1) * 0.03;
+      current.current.y1 += (ty1 - current.current.y1) * 0.03;
+      current.current.x2 += (tx2 - current.current.x2) * 0.03;
+      current.current.y2 += (ty2 - current.current.y2) * 0.03;
+
+      if (orbRef.current) {
+        orbRef.current.style.transform = `translate3d(${current.current.x1}px, ${current.current.y1}px, 0)`;
+      }
+      if (orb2Ref.current) {
+        orb2Ref.current.style.transform = `translate3d(${current.current.x2}px, ${current.current.y2}px, 0)`;
+      }
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("mousemove", handleMouse, { passive: true });
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouse);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <motion.div
-        className="absolute w-[500px] h-[500px] md:w-[700px] md:h-[700px] rounded-full"
-        animate={{
-          x: mousePos.x * 200 - 100,
-          y: mousePos.y * 200 - 100,
-        }}
-        transition={{ type: "spring", damping: 30, stiffness: 50 }}
+      <div
+        ref={orbRef}
+        className="absolute w-[500px] h-[500px] md:w-[700px] md:h-[700px] rounded-full will-change-transform"
         style={{
           right: "-5%",
           top: "10%",
           background:
             "radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, rgba(0, 212, 255, 0.04) 40%, transparent 70%)",
-          filter: "blur(60px)",
+          filter: "blur(50px)",
         }}
       />
-      {/* Secondary smaller orb */}
-      <motion.div
-        className="absolute w-[300px] h-[300px] rounded-full"
-        animate={{
-          x: mousePos.x * -100 + 50,
-          y: mousePos.y * -100 + 50,
-        }}
-        transition={{ type: "spring", damping: 25, stiffness: 40 }}
+      <div
+        ref={orb2Ref}
+        className="absolute w-[300px] h-[300px] rounded-full will-change-transform"
         style={{
           right: "15%",
           bottom: "20%",
           background:
             "radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 60%)",
-          filter: "blur(40px)",
+          filter: "blur(30px)",
         }}
       />
     </div>
@@ -87,6 +109,7 @@ function Marquee() {
 
 export default function Hero() {
   const heroRef = useRef(null);
+  const { scrollTo } = useLenis();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -153,21 +176,13 @@ export default function Hero() {
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4">
             <MagneticButton
               variant="primary"
-              onClick={() =>
-                document
-                  .querySelector("#work")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => scrollTo("#work")}
             >
               View My Work
             </MagneticButton>
             <MagneticButton
               variant="ghost"
-              onClick={() =>
-                document
-                  .querySelector("#contact")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => scrollTo("#contact")}
             >
               Get In Touch
             </MagneticButton>

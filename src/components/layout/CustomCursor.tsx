@@ -1,107 +1,127 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const followRef = useRef<HTMLDivElement>(null);
-  const [cursorState, setCursorState] = useState<"default" | "hovering" | "viewing">("default");
-  const [cursorLabel, setCursorLabel] = useState("");
-  const [isTouch, setIsTouch] = useState(false);
+  const labelRef = useRef<HTMLSpanElement>(null);
+
+  // Keep all mutable state in refs so the effect never re-runs
+  const pos = useRef({ x: -100, y: -100 });
+  const follow = useRef({ x: -100, y: -100 });
+  const currentSize = useRef(40);
+  const targetSize = useRef(40);
+  const isTouchDevice = useRef(false);
+
+  const updateFollower = useCallback(() => {
+    // Smoothly lerp follower towards cursor
+    follow.current.x += (pos.current.x - follow.current.x) * 0.15;
+    follow.current.y += (pos.current.y - follow.current.y) * 0.15;
+
+    // Smoothly lerp size
+    currentSize.current += (targetSize.current - currentSize.current) * 0.15;
+
+    if (followRef.current) {
+      const s = currentSize.current;
+      followRef.current.style.transform = `translate3d(${follow.current.x - s / 2}px, ${follow.current.y - s / 2}px, 0)`;
+      followRef.current.style.width = `${s}px`;
+      followRef.current.style.height = `${s}px`;
+    }
+  }, []);
 
   useEffect(() => {
     // Detect touch device
     if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
-      setIsTouch(true);
+      isTouchDevice.current = true;
+      if (dotRef.current) dotRef.current.style.display = "none";
+      if (followRef.current) followRef.current.style.display = "none";
       return;
     }
 
-    const pos = { x: 0, y: 0 };
-    const follow = { x: 0, y: 0 };
     let rafId: number;
 
     const onMouseMove = (e: MouseEvent) => {
-      pos.x = e.clientX;
-      pos.y = e.clientY;
+      pos.current.x = e.clientX;
+      pos.current.y = e.clientY;
 
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${pos.x - 5}px, ${pos.y - 5}px, 0)`;
+        dotRef.current.style.transform = `translate3d(${e.clientX - 5}px, ${e.clientY - 5}px, 0)`;
+      }
+    };
+
+    const onMouseEnter = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("[data-cursor-view]")) {
+        targetSize.current = 80;
+        if (followRef.current) {
+          followRef.current.style.background = "var(--accent-glow)";
+        }
+        if (labelRef.current) {
+          labelRef.current.textContent = "VIEW →";
+          labelRef.current.style.opacity = "1";
+        }
+      } else {
+        targetSize.current = 60;
+        if (followRef.current) {
+          followRef.current.style.background = "var(--accent-glow)";
+        }
+      }
+    };
+
+    const onMouseLeave = () => {
+      targetSize.current = 40;
+      if (followRef.current) {
+        followRef.current.style.background = "transparent";
+      }
+      if (labelRef.current) {
+        labelRef.current.textContent = "";
+        labelRef.current.style.opacity = "0";
       }
     };
 
     const animate = () => {
-      follow.x += (pos.x - follow.x) * 0.12;
-      follow.y += (pos.y - follow.y) * 0.12;
-
-      if (followRef.current) {
-        const size = cursorState === "viewing" ? 80 : cursorState === "hovering" ? 60 : 40;
-        followRef.current.style.transform = `translate3d(${follow.x - size / 2}px, ${follow.y - size / 2}px, 0)`;
-      }
-
+      updateFollower();
       rafId = requestAnimationFrame(animate);
     };
 
-    const onMouseEnterInteractive = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("[data-cursor-view]")) {
-        setCursorState("viewing");
-        setCursorLabel("VIEW →");
-      } else {
-        setCursorState("hovering");
-        setCursorLabel("");
-      }
-    };
-
-    const onMouseLeaveInteractive = () => {
-      setCursorState("default");
-      setCursorLabel("");
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mousemove", onMouseMove, { passive: true });
     rafId = requestAnimationFrame(animate);
 
-    // Attach hover listeners to interactive elements
-    const interactives = document.querySelectorAll("a, button, [data-cursor-hover], [data-cursor-view]");
-    interactives.forEach((el) => {
-      el.addEventListener("mouseenter", onMouseEnterInteractive);
-      el.addEventListener("mouseleave", onMouseLeaveInteractive);
-    });
+    // Use event delegation instead of attaching to every interactive element
+    document.addEventListener("mouseover", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("a, button, [data-cursor-hover], [data-cursor-view]")) {
+        onMouseEnter(e);
+      }
+    }, { passive: true });
 
-    // Re-attach on DOM changes
-    const observer = new MutationObserver(() => {
-      const newInteractives = document.querySelectorAll("a, button, [data-cursor-hover], [data-cursor-view]");
-      newInteractives.forEach((el) => {
-        el.removeEventListener("mouseenter", onMouseEnterInteractive);
-        el.removeEventListener("mouseleave", onMouseLeaveInteractive);
-        el.addEventListener("mouseenter", onMouseEnterInteractive);
-        el.addEventListener("mouseleave", onMouseLeaveInteractive);
-      });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener("mouseout", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("a, button, [data-cursor-hover], [data-cursor-view]")) {
+        // Only reset if we're not entering another interactive element
+        const related = (e as MouseEvent).relatedTarget as HTMLElement | null;
+        if (!related || !related.closest("a, button, [data-cursor-hover], [data-cursor-view]")) {
+          onMouseLeave();
+        }
+      }
+    }, { passive: true });
 
     return () => {
       document.removeEventListener("mousemove", onMouseMove);
       cancelAnimationFrame(rafId);
-      observer.disconnect();
-      interactives.forEach((el) => {
-        el.removeEventListener("mouseenter", onMouseEnterInteractive);
-        el.removeEventListener("mouseleave", onMouseLeaveInteractive);
-      });
     };
-  }, [cursorState]);
-
-  if (isTouch) return null;
+  }, []); // Empty deps — never re-runs
 
   return (
     <>
       <div ref={dotRef} className="cursor-dot" />
-      <div
-        ref={followRef}
-        className={`cursor-follow ${cursorState === "hovering" ? "hovering" : ""} ${cursorState === "viewing" ? "viewing" : ""}`}
-      >
-        {cursorLabel && (
-          <span className="font-mono text-[10px] text-accent">{cursorLabel}</span>
-        )}
+      <div ref={followRef} className="cursor-follow">
+        <span
+          ref={labelRef}
+          className="font-mono text-[10px] text-accent"
+          style={{ opacity: 0, transition: "opacity 0.2s" }}
+        />
       </div>
     </>
   );
