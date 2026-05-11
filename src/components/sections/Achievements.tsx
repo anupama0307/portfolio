@@ -18,6 +18,7 @@ export default function Achievements() {
 
   return (
     <section
+      id="achievements"
       ref={sectionRef}
       className="relative py-[120px] md:py-[200px] overflow-hidden"
     >

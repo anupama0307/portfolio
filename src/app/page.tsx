@@ -8,6 +8,7 @@ import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import Achievements from "@/components/sections/Achievements";
+import Publications from "@/components/sections/Publications";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import Navbar from "@/components/layout/Navbar";
@@ -44,6 +45,7 @@ export default function Home() {
           <Projects />
           <Experience />
           <Achievements />
+          <Publications />
           <Contact />
         </main>
         <Footer />

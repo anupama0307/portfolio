@@ -17,7 +17,7 @@ export const personalInfo = {
   ],
   stats: [
     { value: 4, suffix: "+", label: "Projects Shipped" },
-    { value: 8.56, suffix: "", label: "CGPA Score" },
+    { value: 8.47, suffix: "", label: "CGPA Score" },
     { value: 10, suffix: "+", label: "Technologies Mastered" },
   ],
   availableForWork: true,
@@ -94,18 +94,6 @@ export const projects: Project[] = [
     github: "https://github.com/anupama0307",
     image: "/images/project-leaflift.webp",
     category: "Mobile · Full Stack",
-  },
-  {
-    id: "forest-fire",
-    number: "004",
-    title: "Forest Fire Prediction",
-    description: "Machine Learning Research",
-    longDescription:
-      "Developed wildfire prediction models using meteorological and satellite data (MODIS/VIIRS). Trained XGBoost models with stratified cross-validation for imbalanced datasets. Research paper submitted for publication.",
-    techStack: ["Python", "XGBoost", "Scikit-learn", "MODIS/VIIRS"],
-    github: "https://github.com/anupama0307",
-    image: "/images/project-forestfire.webp",
-    category: "Machine Learning · Research",
   },
 ];
 
@@ -197,7 +185,7 @@ export const experiences: Experience[] = [
     dateRange: "2023 — 2027",
     current: true,
     achievements: [
-      "Maintaining a CGPA of 8.56 while actively building production-grade projects",
+      "Maintaining a CGPA of 8.47 while actively building production-grade projects",
       "National Semi-Finalist at Flipkart GRID 7.0 — one of India's most competitive tech challenges",
       "Conducting research on wildfire prediction using ML, with a paper submitted for publication",
     ],
@@ -220,6 +208,34 @@ export const experiences: Experience[] = [
       "PostgreSQL",
       "Docker",
       "Gemini API",
+    ],
+  },
+];
+
+export interface Publication {
+  title: string;
+  venue: string;
+  year: string;
+  description: string;
+  tags: string[];
+  link?: string;
+}
+
+export const publications: Publication[] = [
+  {
+    title:
+      "A Data-Driven Machine Learning Framework for Forest Fire Prediction in the Satpura Region",
+    venue: "PEIS 2026, National Institute of Technology Uttarakhand",
+    year: "2026",
+    description:
+      "Presented research on wildfire risk prediction using machine learning models trained on meteorological and satellite datasets. Applied XGBoost-based classification, feature engineering, preprocessing, and imbalance-handling techniques for high-risk prediction analysis. Evaluated model performance using precision, recall, F1-score, and ROC-AUC metrics for imbalanced wildfire datasets.",
+    tags: [
+      "XGBoost",
+      "Wildfire Prediction",
+      "Satellite Data",
+      "Imbalanced Learning",
+      "ROC-AUC",
+      "Feature Engineering",
     ],
   },
 ];
@@ -258,7 +274,7 @@ export const achievements: Achievement[] = [
     icon: "zap",
   },
   {
-    title: "CGPA 8.56 — B.Tech CSE",
+    title: "CGPA 8.47 — B.Tech CSE",
     org: "Amrita Vishwa Vidyapeetham",
     year: "2023 — 2027",
     description:
@@ -271,6 +287,7 @@ export const navLinks = [
   { label: "About", href: "#about" },
   { label: "Work", href: "#work" },
   { label: "Experience", href: "#experience" },
+  { label: "Publications", href: "#publications" },
   { label: "Contact", href: "#contact" },
 ];
 
