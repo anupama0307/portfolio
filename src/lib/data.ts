@@ -2,7 +2,7 @@ export const personalInfo = {
   name: "Anupama Nair",
   initials: "AN",
   title: "Full Stack Developer",
-  tagline: "Building things\nthat work &\nlook stunning.",
+  tagline: "Full-stack\nsoftware, from\nidea to interface.",
   subtitle: "End-to-end development. Pixel-perfect interfaces.",
   year: new Date().getFullYear(),
   email: "anupamanairmail@gmail.com",

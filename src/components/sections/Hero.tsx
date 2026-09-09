@@ -4,85 +4,12 @@ import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { personalInfo, marqueeItems } from "@/lib/data";
 import { staggerContainer, fadeUp } from "@/lib/animations";
-import { ArrowDown } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useLenis } from "@/components/layout/SmoothScroll";
 
-function GlowOrb() {
-  const orbRef = useRef<HTMLDivElement>(null);
-  const orb2Ref = useRef<HTMLDivElement>(null);
-  const mouse = useRef({ x: 0.5, y: 0.5 });
-  const current = useRef({ x1: 0, y1: 0, x2: 0, y2: 0 });
-
-  useEffect(() => {
-    const handleMouse = (e: MouseEvent) => {
-      mouse.current.x = e.clientX / window.innerWidth;
-      mouse.current.y = e.clientY / window.innerHeight;
-    };
-
-    let rafId: number;
-    const animate = () => {
-      const tx1 = mouse.current.x * 200 - 100;
-      const ty1 = mouse.current.y * 200 - 100;
-      const tx2 = mouse.current.x * -100 + 50;
-      const ty2 = mouse.current.y * -100 + 50;
-
-      // Smooth lerp
-      current.current.x1 += (tx1 - current.current.x1) * 0.03;
-      current.current.y1 += (ty1 - current.current.y1) * 0.03;
-      current.current.x2 += (tx2 - current.current.x2) * 0.03;
-      current.current.y2 += (ty2 - current.current.y2) * 0.03;
-
-      if (orbRef.current) {
-        orbRef.current.style.transform = `translate3d(${current.current.x1}px, ${current.current.y1}px, 0)`;
-      }
-      if (orb2Ref.current) {
-        orb2Ref.current.style.transform = `translate3d(${current.current.x2}px, ${current.current.y2}px, 0)`;
-      }
-
-      rafId = requestAnimationFrame(animate);
-    };
-
-    window.addEventListener("mousemove", handleMouse, { passive: true });
-    rafId = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouse);
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div
-        ref={orbRef}
-        className="absolute w-[500px] h-[500px] md:w-[700px] md:h-[700px] rounded-full will-change-transform"
-        style={{
-          right: "-5%",
-          top: "10%",
-          background:
-            "radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, rgba(0, 212, 255, 0.04) 40%, transparent 70%)",
-          filter: "blur(50px)",
-        }}
-      />
-      <div
-        ref={orb2Ref}
-        className="absolute w-[300px] h-[300px] rounded-full will-change-transform"
-        style={{
-          right: "15%",
-          bottom: "20%",
-          background:
-            "radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 60%)",
-          filter: "blur(30px)",
-        }}
-      />
-    </div>
-  );
-}
-
 function Marquee() {
   return (
-    <div className="overflow-hidden border-t border-b border-border py-4 mt-12 md:mt-20">
+    <div className="overflow-hidden border-t border-border py-4 bg-background z-20">
       <div className="marquee-track flex whitespace-nowrap">
         {[...marqueeItems, ...marqueeItems].map((item, i) => (
           <span
@@ -109,109 +36,152 @@ function Marquee() {
 
 export default function Hero() {
   const heroRef = useRef(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
+
   const { scrollTo } = useLenis();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
+  
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const y = useTransform(scrollYProgress, [0, 0.8], [0, -80]);
 
   const headlineLines = personalInfo.tagline.split("\n");
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!stageRef.current || !groupRef.current) return;
+    const r = stageRef.current.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    groupRef.current.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 14}deg)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!groupRef.current) return;
+    groupRef.current.style.transform = 'rotateY(0deg) rotateX(0deg)';
+  };
+
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col pt-24 md:pt-0 overflow-hidden"
     >
-      <GlowOrb />
-
       <motion.div
         style={{ opacity, y }}
-        className="relative z-10 max-w-[1400px] mx-auto w-full px-6 md:px-12 pt-24 md:pt-0"
+        className="relative z-10 flex-grow flex items-center max-w-[1400px] mx-auto w-full px-6 md:px-12"
       >
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="max-w-4xl"
-        >
-          {/* Label */}
-          <motion.p
-            variants={fadeUp}
-            className="font-mono text-xs md:text-sm text-accent tracking-wider mb-6 md:mb-8"
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center w-full">
+          
+          {/* Left Side: 3D Composition from User HTML */}
+          <div 
+            className="glass-stage w-full max-w-[500px] mx-auto hidden lg:flex" 
+            ref={stageRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
           >
-            Full Stack Developer — {personalInfo.year}
-          </motion.p>
-
-          {/* Headline */}
-          <div className="mb-6 md:mb-8">
-            {headlineLines.map((line, i) => (
-              <div key={i} className="overflow-hidden">
-                <motion.h1
-                  initial={{ y: "100%" }}
-                  animate={{ y: "0%" }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 3.0 + i * 0.15,
-                    ease: [0.76, 0, 0.24, 1],
-                  }}
-                  className="font-display italic font-light text-hero text-text-primary"
-                >
-                  {line}
-                </motion.h1>
+            <div className="glow-blob"></div>
+            <div className="glass-group" ref={groupRef}>
+              <div className="pane pane-data">
+                <div className="pane-sheen"></div>
+                <div className="data-rows">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+                <div className="pane-label">data</div>
               </div>
-            ))}
+              <div className="pane pane-logic">
+                <div className="pane-sheen"></div>
+                <div className="logic-glyph">&lt;/&gt;</div>
+                <div className="pane-label">logic</div>
+              </div>
+              <div className="pane pane-interface">
+                <div className="pane-sheen"></div>
+                <div className="browser-bar">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div className="browser-lines">
+                  <div></div>
+                  <div></div>
+                </div>
+                <div className="pane-label">interface</div>
+              </div>
+            </div>
           </div>
 
-          {/* Subtitle */}
-          <motion.p
-            variants={fadeUp}
-            className="font-body text-base md:text-lg text-text-muted max-w-lg mb-8 md:mb-12"
+          {/* Right Side: Text & CTA */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col justify-center max-w-xl mx-auto lg:mx-0 lg:ml-auto"
           >
-            {personalInfo.subtitle}
-          </motion.p>
+            {/* Label */}
+            <motion.p
+              variants={fadeUp}
+              className="font-mono text-xs md:text-sm text-accent tracking-wider mb-6 md:mb-8"
+            >
+              Full Stack Developer — {personalInfo.year}
+            </motion.p>
 
-          {/* CTA Buttons */}
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4">
-            <MagneticButton
-              variant="primary"
-              onClick={() => scrollTo("#work")}
+            {/* Headline */}
+            <div className="mb-6 md:mb-8">
+              {headlineLines.map((line, i) => (
+                <div key={i} className="overflow-hidden">
+                  <motion.h1
+                    initial={{ y: "100%" }}
+                    animate={{ y: "0%" }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 0.5 + i * 0.15,
+                      ease: [0.76, 0, 0.24, 1],
+                    }}
+                    className="font-display italic font-light text-[3.5rem] md:text-[5rem] lg:text-[5.5rem] leading-[1.05] tracking-tight text-text-primary"
+                  >
+                    {line}
+                  </motion.h1>
+                </div>
+              ))}
+            </div>
+
+            {/* Subtitle */}
+            <motion.p
+              variants={fadeUp}
+              className="font-body text-base md:text-lg text-text-muted max-w-lg mb-8 md:mb-12"
             >
-              View My Work
-            </MagneticButton>
-            <MagneticButton
-              variant="ghost"
-              onClick={() => scrollTo("#contact")}
-            >
-              Get In Touch
-            </MagneticButton>
+              {personalInfo.subtitle}
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4">
+              <MagneticButton
+                variant="primary"
+                onClick={() => scrollTo("#work")}
+              >
+                View My Work
+              </MagneticButton>
+              <MagneticButton
+                variant="ghost"
+                onClick={() => scrollTo("#contact")}
+              >
+                Get In Touch
+              </MagneticButton>
+            </motion.div>
           </motion.div>
-        </motion.div>
+
+        </div>
       </motion.div>
 
-      {/* Marquee */}
-      <div className="w-full mt-auto relative z-10">
+      {/* Marquee at the very bottom */}
+      <div className="w-full absolute bottom-0 left-0 z-20">
         <Marquee />
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 4, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
-      >
-        <span className="font-mono text-[10px] text-text-muted tracking-widest uppercase">
-          Scroll
-        </span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ArrowDown size={14} className="text-text-muted" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }
