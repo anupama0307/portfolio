@@ -16,7 +16,7 @@ export const personalInfo = {
     "When I'm not shipping features, I'm exploring machine learning research, competing in national hackathons, or pushing the boundaries of what's possible with modern web technologies.",
   ],
   stats: [
-    { value: 4, suffix: "+", label: "Projects Shipped" },
+    { value: 3, suffix: "+", label: "Projects Shipped" },
     { value: 8.47, suffix: "", label: "CGPA Score" },
     { value: 10, suffix: "+", label: "Technologies Mastered" },
   ],
@@ -39,12 +39,33 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "riskoff",
+    id: "scaler-ai",
     number: "001",
+    title: "Scaler AI Portfolio Agent",
+    description: "Dual-modality AI agent with real-time voice and web chat",
+    longDescription:
+      "Architected a dual-modality AI agent supporting real-time voice interactions and streaming web chat using Gemini, Vapi, Deepgram, and ElevenLabs. Developed a Retrieval-Augmented Generation (RAG) pipeline using FastAPI and ChromaDB to index resume and GitHub repositories, enabling semantic retrieval and grounded LLM responses. Optimized voice-agent scheduling latency from ~4s to under 100ms using caching and revalidation, eliminating third-party webhook timeout failures.",
+    techStack: [
+      "Next.js",
+      "TypeScript",
+      "FastAPI",
+      "Python",
+      "ChromaDB",
+      "Gemini",
+      "Docker",
+    ],
+    github: "https://github.com/anupama0307",
+    image: "/images/project-scaler.webp",
+    featured: true,
+    category: "AI · Full Stack",
+  },
+  {
+    id: "riskoff",
+    number: "002",
     title: "RISKOFF",
     description: "AI-Driven FinTech Risk Platform",
     longDescription:
-      "Engineered a backend-driven fintech platform for loan lifecycle management with reliable and low-latency risk scoring. Implemented a hybrid credit scoring system combining ML predictions with rule-based financial validation.",
+      "Developed an AI-powered financial risk assessment platform using React, FastAPI, PostgreSQL, and Docker to automate loan-risk evaluation workflows. Built backend services for financial analysis, risk scoring, authentication, and secure API communication across multiple application modules. Containerized backend infrastructure using Docker, enabling reproducible development environments and streamlined deployment workflows.",
     techStack: [
       "React",
       "FastAPI",
@@ -59,112 +80,101 @@ export const projects: Project[] = [
     category: "Full Stack · AI",
   },
   {
-    id: "gemchef",
-    number: "002",
-    title: "GemChef",
-    description: "AI-Powered Meal Planning Platform",
-    longDescription:
-      "Built a conversational AI interface using natural language inputs to generate structured outputs from LLM responses. Designed REST APIs for recipe generation, meal planning, and grocery list creation with dietary customization.",
-    techStack: [
-      "Next.js 14",
-      "TypeScript",
-      "Node.js",
-      "PostgreSQL",
-      "Gemini API",
-    ],
-    github: "https://github.com/anupama0307",
-    image: "/images/project-gemchef.webp",
-    category: "Full Stack · AI",
-  },
-  {
-    id: "leaflift",
+    id: "amazon-intent",
     number: "003",
-    title: "LeafLift",
-    description: "Real-Time Ride Matching & Mobility Platform",
+    title: "Amazon Intent-to-Cart",
+    description: "AI-driven intent understanding for personalized shopping carts",
     longDescription:
-      "Designed and built an end-to-end real-time ride-sharing product with geospatial ride-matching algorithms and low-latency communication pipelines using Firebase and WebSockets.",
+      "Built a multimodal commerce platform that transforms text, voice, and image inputs into personalized shopping carts through AI-driven intent understanding. Developed image-to-cart and multilingual voice-to-cart workflows using Gemini multimodal capabilities to extract shopping intent and generate contextual product recommendations. Designed a modular intent-orchestration pipeline to process multimodal inputs and route extracted intent across recommendation and cart-generation workflows.",
     techStack: [
-      "React Native",
+      "Next.js",
       "TypeScript",
-      "Node.js",
-      "Express",
-      "MongoDB",
-      "Firebase",
+      "Gemini API",
+      "Vercel",
     ],
     github: "https://github.com/anupama0307",
-    image: "/images/project-leaflift.webp",
-    category: "Mobile · Full Stack",
+    image: "/images/project-amazon.webp",
+    category: "AI · Front End",
   },
 ];
 
 export interface Skill {
   name: string;
-  category: "Frontend" | "Backend" | "Database" | "DevOps" | "AI / ML";
+  category: "Frontend" | "Backend" | "Database" | "DevOps" | "AI / ML" | "Core CS" | "Embedded Systems" | "Other";
   proficiency: number; // 0-100
 }
 
 export const skills: Skill[] = [
+  // Languages & Core
+  { name: "Java", category: "Backend", proficiency: 85 },
+  { name: "Python", category: "Backend", proficiency: 90 },
+  { name: "C", category: "Core CS", proficiency: 80 },
+  { name: "Data Structures & Algorithms", category: "Core CS", proficiency: 90 },
+  { name: "Object-Oriented Programming", category: "Core CS", proficiency: 90 },
+  { name: "Operating Systems", category: "Core CS", proficiency: 85 },
+  { name: "Computer Networks", category: "Core CS", proficiency: 80 },
+  
+  // Frontend
   { name: "React.js", category: "Frontend", proficiency: 90 },
   { name: "Next.js", category: "Frontend", proficiency: 88 },
   { name: "TypeScript", category: "Frontend", proficiency: 85 },
-  { name: "JavaScript", category: "Frontend", proficiency: 92 },
-  { name: "Tailwind CSS", category: "Frontend", proficiency: 90 },
-  { name: "React Native", category: "Frontend", proficiency: 75 },
-  { name: "Node.js", category: "Backend", proficiency: 88 },
+  
+  // Backend & Database
   { name: "FastAPI", category: "Backend", proficiency: 85 },
-  { name: "Express.js", category: "Backend", proficiency: 82 },
-  { name: "Python", category: "Backend", proficiency: 90 },
-  { name: "Java", category: "Backend", proficiency: 78 },
-  { name: "REST APIs", category: "Backend", proficiency: 92 },
-  { name: "WebSockets", category: "Backend", proficiency: 80 },
   { name: "PostgreSQL", category: "Database", proficiency: 85 },
-  { name: "MongoDB", category: "Database", proficiency: 82 },
-  { name: "Supabase", category: "Database", proficiency: 78 },
-  { name: "Firebase", category: "Database", proficiency: 80 },
-  { name: "Docker", category: "DevOps", proficiency: 80 },
+  { name: "DBMS", category: "Database", proficiency: 85 },
+  { name: "ChromaDB", category: "Database", proficiency: 80 },
+  
+  // DevOps & Tools
   { name: "Git", category: "DevOps", proficiency: 90 },
-  { name: "Linux", category: "DevOps", proficiency: 78 },
-  { name: "AWS", category: "DevOps", proficiency: 70 },
+  { name: "Docker", category: "DevOps", proficiency: 85 },
+  { name: "Linux", category: "DevOps", proficiency: 85 },
+  
+  // Embedded Systems
+  { name: "Embedded C", category: "Embedded Systems", proficiency: 75 },
+  { name: "ECU Architecture", category: "Embedded Systems", proficiency: 70 },
+  { name: "Debugging", category: "DevOps", proficiency: 85 },
+  
+  // AI / ML
+  { name: "Gemini", category: "AI / ML", proficiency: 85 },
+  { name: "LLM APIs", category: "AI / ML", proficiency: 85 },
   { name: "XGBoost", category: "AI / ML", proficiency: 78 },
-  { name: "Scikit-learn", category: "AI / ML", proficiency: 75 },
-  { name: "LLM APIs", category: "AI / ML", proficiency: 82 },
 ];
 
 export const skillPillars = [
   {
-    title: "Frontend Excellence",
-    description: "Crafting pixel-perfect, performant user interfaces",
+    title: "Software Engineering & Core CS",
+    description: "Strong foundation in data structures, algorithms, and system design",
     skills: [
-      "React.js",
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "React Native",
-      "Framer Motion",
-    ],
-  },
-  {
-    title: "Backend Architecture",
-    description: "Building robust, scalable server-side systems",
-    skills: [
-      "Node.js",
-      "FastAPI",
+      "Java",
       "Python",
-      "REST APIs",
-      "WebSockets",
-      "Express.js",
+      "C",
+      "Data Structures & Algorithms",
+      "Object-Oriented Programming",
+      "Operating Systems",
     ],
   },
   {
-    title: "Data & Deployment",
-    description: "From database design to production infrastructure",
+    title: "Full Stack & AI Integration",
+    description: "Building scalable backend services and AI-powered interfaces",
     skills: [
+      "Next.js",
+      "React",
+      "FastAPI",
       "PostgreSQL",
-      "MongoDB",
       "Docker",
-      "Firebase",
-      "Git",
+      "Gemini API",
+    ],
+  },
+  {
+    title: "Embedded & Systems",
+    description: "Hardware-level programming and automotive software systems",
+    skills: [
+      "Embedded C",
+      "ECU Architecture",
       "Linux",
+      "Debugging",
+      "Git",
     ],
   },
 ];
@@ -180,6 +190,34 @@ export interface Experience {
 
 export const experiences: Experience[] = [
   {
+    company: "Visteon Corporation",
+    role: "Visteon Scholar",
+    dateRange: "Present",
+    current: true,
+    achievements: [
+      "Selected for Visteon's nationwide mentorship program focused on automotive software systems.",
+      "Gained exposure to Embedded C, ECU architecture, debugging, and embedded software development practices."
+    ],
+    techTags: ["Embedded C", "ECU Architecture", "Debugging", "Linux", "Automotive Software"],
+  },
+  {
+    company: "Infosys Springboard",
+    role: "Virtual Intern",
+    dateRange: "Past",
+    current: false,
+    achievements: [
+      "Developed FastAPI backend services integrating Open-Meteo, OpenStreetMap and XGBoost for disaster severity prediction, rescue prioritization and AI-assisted resource allocation."
+    ],
+    techTags: [
+      "FastAPI",
+      "Python",
+      "XGBoost",
+      "Open-Meteo",
+      "OpenStreetMap",
+      "AI",
+    ],
+  },
+  {
     company: "Amrita Vishwa Vidyapeetham",
     role: "B.Tech Computer Science & Engineering",
     dateRange: "2023 — 2027",
@@ -189,26 +227,7 @@ export const experiences: Experience[] = [
       "National Semi-Finalist at Flipkart GRID 7.0 — one of India's most competitive tech challenges",
       "Conducting research on wildfire prediction using ML, with a paper submitted for publication",
     ],
-    techTags: ["Java", "Python", "JavaScript", "Data Structures", "Algorithms"],
-  },
-  {
-    company: "Independent Projects",
-    role: "Full Stack Developer",
-    dateRange: "2023 — Present",
-    current: true,
-    achievements: [
-      "Architected and shipped 4+ production-grade applications spanning fintech, AI, and mobility",
-      "Built real-time systems using WebSockets and Firebase for sub-second latency",
-      "Integrated LLM APIs (Gemini) for intelligent, AI-powered user experiences",
-    ],
-    techTags: [
-      "React",
-      "Next.js",
-      "FastAPI",
-      "PostgreSQL",
-      "Docker",
-      "Gemini API",
-    ],
+    techTags: ["Java", "Python", "C", "Data Structures", "Algorithms"],
   },
 ];
 
@@ -225,14 +244,14 @@ export const publications: Publication[] = [
   {
     title:
       "A Data-Driven Machine Learning Framework for Forest Fire Prediction in the Satpura Region",
-    venue: "PEIS 2026, National Institute of Technology Uttarakhand",
+    venue: "PEIS 2026, NIT Uttarakhand (Springer)",
     year: "2026",
     description:
       "Presented research on wildfire risk prediction using machine learning models trained on meteorological and satellite datasets. Applied XGBoost-based classification, feature engineering, preprocessing, and imbalance-handling techniques for high-risk prediction analysis. Evaluated model performance using precision, recall, F1-score, and ROC-AUC metrics for imbalanced wildfire datasets.",
     tags: [
       "XGBoost",
       "Wildfire Prediction",
-      "Satellite Data",
+      "Machine Learning",
       "Imbalanced Learning",
       "ROC-AUC",
       "Feature Engineering",
@@ -245,33 +264,33 @@ export interface Achievement {
   org: string;
   year: string;
   description: string;
-  icon: "trophy" | "flame" | "book" | "zap";
+  icon: "trophy" | "flame" | "book" | "zap" | "star";
 }
 
 export const achievements: Achievement[] = [
   {
     title: "National Semi-Finalist — Flipkart GRID 7.0",
     org: "Flipkart",
-    year: "2025",
+    year: "Present",
     description:
-      "Competed among thousands of teams in one of India's most prestigious tech challenges, advancing to the national semi-final round with an innovative solution.",
+      "Reached the national semifinals of Flipkart's flagship engineering competition.",
     icon: "trophy",
+  },
+  {
+    title: "Community Volunteer",
+    org: "National Service Scheme (NSS)",
+    year: "Present",
+    description:
+      "Actively volunteering for community service and social activities as part of the National Service Scheme.",
+    icon: "star",
   },
   {
     title: "Research Paper — Wildfire Prediction",
     org: "Amrita Vishwa Vidyapeetham",
-    year: "2025",
+    year: "Present",
     description:
       "Authored a research paper on wildfire prediction using XGBoost and MODIS/VIIRS satellite data, submitted for publication in an international journal.",
     icon: "book",
-  },
-  {
-    title: "4+ Production-Grade Projects Shipped",
-    org: "Independent",
-    year: "2023 — Present",
-    description:
-      "Architected and deployed full-stack applications spanning fintech, AI-powered meal planning, real-time mobility, and machine learning — from concept to production.",
-    icon: "zap",
   },
   {
     title: "CGPA 8.47 — B.Tech CSE",
@@ -292,16 +311,16 @@ export const navLinks = [
 ];
 
 export const marqueeItems = [
+  "Java",
+  "Python",
+  "C",
   "React",
   "Next.js",
-  "Node.js",
   "TypeScript",
-  "PostgreSQL",
-  "Tailwind",
-  "Docker",
   "FastAPI",
-  "Python",
-  "MongoDB",
-  "Firebase",
-  "WebSockets",
+  "PostgreSQL",
+  "Docker",
+  "Gemini",
+  "Embedded C",
+  "Linux",
 ];

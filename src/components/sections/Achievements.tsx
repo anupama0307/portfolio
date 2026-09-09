@@ -3,13 +3,14 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { achievements } from "@/lib/data";
-import { Trophy, Flame, BookOpen, Zap } from "lucide-react";
+import { Trophy, Flame, BookOpen, Zap, Star } from "lucide-react";
 
 const iconMap: Record<string, React.ElementType> = {
   trophy: Trophy,
   flame: Flame,
   book: BookOpen,
   zap: Zap,
+  star: Star,
 };
 
 export default function Achievements() {
